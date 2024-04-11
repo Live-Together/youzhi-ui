@@ -50,10 +50,6 @@ export const routes = [
 				path: '/SchoolApply',
 				component: () => import('@/components/SchoolApply')
 			},
-			{
-				path: '/testAxios',
-				component: () => import('@/views/testUpload')
-			}
 		]
 	},
 	
