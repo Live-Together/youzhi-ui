@@ -5,7 +5,10 @@
         <div slot="header">
           <i class="el-icon-user"></i>
           <span style="margin-left: 5px">个人信息</span>
-          <el-button type="primary" style="float: right" @click="handleUpdate"
+          <el-button
+            type="primary"
+            style="float: right"
+            @click="handleUpdate"
             >{{ msg }}</el-button
           >
         </div>
@@ -14,7 +17,7 @@
             label-position="left"
             label-width="130px"
             ref="studentForm"
-            :model="studentForm"
+            :model="student"
             :rules="studentRules"
             v-loading="loading"
           >
@@ -25,13 +28,20 @@
               <el-input v-model="student.username" :readonly="edit"></el-input>
             </el-form-item>
             <el-form-item label="学生姓名" prop="studentName">
-              <el-input v-model="student.studentName" :readonly="edit"></el-input>
+              <el-input
+                v-model="student.studentName"
+                :readonly="edit"
+              ></el-input>
             </el-form-item>
             <el-form-item label="分数" prop="score">
               <el-input v-model="student.score" :readonly="edit"></el-input>
             </el-form-item>
-            <el-radio v-model="student.subject" label="1" :disabled="edit">文科生</el-radio>
-            <el-radio v-model="student.subject" label="2" :disabled="edit">理科生</el-radio> 
+            <el-radio v-model="student.subject" label="1" :disabled="edit"
+              >文科生</el-radio
+            >
+            <el-radio v-model="student.subject" label="2" :disabled="edit"
+              >理科生</el-radio
+            >
           </el-form>
         </div>
       </el-card>
@@ -40,42 +50,43 @@
 </template>
 
 <script>
-import axios from "axios";
+import { updateInfo, getStudentInfo } from "@/api/person/personInfo";
+
 export default {
   name: "PersonModify",
   data() {
     return {
-        msg: '修 改',
-        edit: true,
-        student: {
-            studentId: '',
-            username: "",
-            studentName: "",
-            score: "",
-            subject: "",
-        },
-        loading: false,
+      msg: "修 改",
+      edit: true,
+      student: {
+        studentId: "",
+        username: "",
+        studentName: "",
+        score: "",
+        subject: "",
+      },
+      loading: false,
+      studentRules: {},
     };
   },
   methods: {
-
     //更新学生信息
     handleUpdate() {
-        if(this.msg === '修 改'){
-            this.msg = "确 认"
-            this.edit = false
-        } else {
-            this.msg = "修 改"
-            this.edit = true
-            //在后端进行修改并发送请求
-            axios.post("/api/" + this.student.studentId + '/update', this.student).then(res => {
-                if(res.data.code === 200){
-                  this.$message.success("修改成功")
-                } else {
-                  this.$message.error("修改失败")
-                }
-            })
-        }
+      if (this.msg === "修 改") {
+        this.msg = "确 认";
+        this.edit = false;
+      } else {
+        this.msg = "修 改";
+        this.edit = true;
+        //在后端进行修改并发送请求
+        updateInfo(this.student).then((res) => {
+          if (res.data.code === 200) {
+            this.$message.success("修改成功");
+          } else {
+            this.$message.error("修改失败");
+          }
+        });
+      }
     },
 
     switchMajorVariety(number) {
@@ -90,22 +101,21 @@ export default {
     },
   },
   mounted() {
-    this.loading = true
-    this.student.studentId = sessionStorage.getItem("user")
-    axios("/api/" + this.student.studentId).then((res) => {
-      if(res.data.code === 200){
+    this.loading = true;
+    this.student.studentId = sessionStorage.getItem("user");
+    getStudentInfo(this.student.studentId).then((res) => {
+      if (res.data.code === 200) {
         this.student.username = res.data.data.username;
         this.student.studentName = res.data.data.studentName;
         this.student.score = res.data.data.score;
-        this.student.subject = res.data.data.subject + ''
-		this.loading = false
+        this.student.subject = res.data.data.subject + "";
+        this.loading = false;
       } else {
-        this.$message("用户还未登录")
-        this.$router.push("/")
+        this.$message("用户还未登录");
+        this.$router.push("/");
       }
     });
   },
-
 };
 </script>
 

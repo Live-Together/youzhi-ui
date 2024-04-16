@@ -53,10 +53,7 @@
                 <el-col :span="24" id="sv-el-col">
                   <el-card shadow="hover" id="sv-el-card">
                     <img src="/imgs/211.png" id="sv-img2" />
-                    <span
-                      class="sv-text"
-                      @click="handleClick(2)"
-                    >
+                    <span class="sv-text" @click="handleClick(2)">
                       <span id="text">211院校</span>
                       <span style="margin-left: 15px; font-size: 27px">
                         <i class="el-icon-d-arrow-right"></i>
@@ -76,10 +73,7 @@
                 <el-col :span="24" id="sv-el-col">
                   <el-card shadow="hover" id="sv-el-card">
                     <img src="/imgs/bk1.png" id="sv-img2" />
-                    <span
-                      class="sv-text"
-                      @click="handleClick(3)"
-                    >
+                    <span class="sv-text" @click="handleClick(3)">
                       <span id="text">一本院校</span>
                       <span style="margin-left: 15px; font-size: 27px">
                         <i class="el-icon-d-arrow-right"></i>
@@ -101,10 +95,7 @@
                 <el-col :span="24" id="sv-el-col">
                   <el-card shadow="hover" id="sv-el-card">
                     <img src="/imgs/bk2.png" id="sv-img2" />
-                    <span
-                      class="sv-text"
-                      @click="handleClick(4)"
-                    >
+                    <span class="sv-text" @click="handleClick(4)">
                       <span id="text">二本院校</span>
                       <span style="margin-left: 15px; font-size: 27px">
                         <i class="el-icon-d-arrow-right"></i>
@@ -123,10 +114,7 @@
                 <el-col :span="24" id="sv-el-col">
                   <el-card shadow="hover" id="sv-el-card">
                     <img src="/imgs/zk.png" id="sv-img2" />
-                    <span
-                      class="sv-text"
-                      @click="2(5)"
-                    >
+                    <span class="sv-text" @click="2(5)">
                       <span id="text">专科院校</span>
                       <span style="margin-left: 15px; font-size: 27px">
                         <i class="el-icon-d-arrow-right"></i>
@@ -152,7 +140,8 @@
   
 <script>
 import DialogCommon from "@/components/DialogCommon";
-import axios from "axios";
+import { getSchoolBySchoolVariety, getAllSchoolShow } from "@/api/school/home";
+
 export default {
   components: { DialogCommon },
   data() {
@@ -178,19 +167,19 @@ export default {
           return "专科院校";
       }
     },
-    handleClick(num) {
+    handleClick(schoolVariety) {
       this.dialogShow = true;
-      this.schoolVariety = num;
-      axios
-        .get("/api/getSchoolBySchoolVariety", {
-          params: { schoolVariety: num },
-        })
-        .then((res) => {
-          res.data.data.map(item => {
-            item.schoolVariety = this.switchSchoolVariety(item.schoolVariety)
-          })
-          this.$store.commit("changeSchoolList", res.data.data);
+      this.schoolVariety = schoolVariety;
+      let params = {
+        schoolVariety
+      }
+      getSchoolBySchoolVariety(params).then((res) => {
+        res.data.data.map((item) => {
+          item.schoolVariety = this.switchSchoolVariety(item.schoolVariety);
+          return item;
         });
+        this.$store.commit("changeSchoolList", res.data.data);
+      });
     },
   },
   computed: {
@@ -198,11 +187,11 @@ export default {
       return this.$store.state.schoolList;
     },
   },
-  mounted(){
-    axios("/api/getAllSchoolShow").then(res => {
-      this.cards = res.data.data
-    })
-  }
+  mounted() {
+    getAllSchoolShow().then((res) => {
+      this.cards = res.data.data;
+    });
+  },
 };
 </script>
   

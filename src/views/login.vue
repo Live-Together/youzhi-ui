@@ -1,5 +1,12 @@
 <template>
-  <div id="container" :style="{backgroundImage: 'url(' + bgImage + ')', backgroundRepeat: 'no-repeat', backgroundSize: '100vw'}">
+  <div
+    id="container"
+    :style="{
+      backgroundImage: 'url(' + bgImage + ')',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: '100vw',
+    }"
+  >
     <div id="app">
       <div id="left">
         <span id="text1">优志网</span>
@@ -16,15 +23,32 @@
             ref="ruleForm"
             :model="ruleForm"
           >
-            <el-form-item label="账号" prop="username" size="mini" >
-              <el-input placeholder="请输入账号" v-model="ruleForm.username"></el-input>
+            <el-form-item label="账号" prop="studentId" size="mini">
+              <el-input
+                placeholder="请输入账号"
+                v-model="ruleForm.studentId"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password" size="mini" >
-                <el-input placeholder="请输入密码" v-model="ruleForm.password" show-password required></el-input>
+            <el-form-item label="密码" prop="password" size="mini">
+              <el-input
+                placeholder="请输入密码"
+                v-model="ruleForm.password"
+                show-password
+                required
+              ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')" style="width:80%;padding: 8px;margin-left: 30px">登录</el-button>
-              <el-button type="text" style="width:100%; padding: 0;height: 20px;margin: auto;">没有账号？去注册</el-button>
+              <el-button
+                type="primary"
+                @click="submitForm('ruleForm')"
+                style="width: 80%; padding: 8px; margin-left: 30px"
+                >登录</el-button
+              >
+              <el-button
+                type="text"
+                style="width: 100%; padding: 0; height: 20px; margin: auto"
+                >没有账号？去注册</el-button
+              >
             </el-form-item>
           </el-form>
         </div>
@@ -34,44 +58,38 @@
 </template>
 
   <script>
-  import axios from "axios";
+import { login } from "@/api/login.js";
+
 export default {
   data() {
     return {
-        ruleForm: {
-          username: '',
-          password: '',
-        },
-        rules:{
-          username: {required: true, message: "请输入用户名", trigger:"blur"},
-          password: {required: true, message: "请输入密码", trigger:"blur"}
-        },
-        bgImage: require('@/assets/login.jpeg')
+      ruleForm: {
+        studentId: "",
+        password: "",
+      },
+      rules: {
+        studentId: { required: true, message: "请输入用户名", trigger: "blur" },
+        password: { required: true, message: "请输入密码", trigger: "blur" },
+      },
+      bgImage: require("@/assets/login.jpeg"),
     };
   },
   methods: {
-    submitForm(formName){
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        if(valid){
-            axios({
-                url: '/api/login',
-                method: 'POST',
-                data: {
-                  "studentId" : this.ruleForm.username - 0,
-                  "password": this.ruleForm.password
-                }
-            }).then(res => {
-              if(res.data.code == 200){
-                this.$message.success('登陆成功')
-                window.sessionStorage.setItem('user', this.ruleForm.username)
-                this.$router.push("/Home")
-              } else {
-                this.$message.error('账号或密码错误')
-              }
-          })
+        if (valid) {
+          login(this.ruleForm).then((res) => {
+            if (res.data.code == 200) {
+              this.$message.success("登陆成功");
+              window.sessionStorage.setItem("user", this.ruleForm.studentId);
+              this.$router.push("/Home");
+            } else {
+              this.$message.error("账号或密码错误");
+            }
+          });
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>
@@ -109,40 +127,41 @@ export default {
 }
 
 #hello {
-    font-size: 30px;
-    font-weight: bolder;
-    color: #006EFF;
-    height: 60px;
-    display:block;
+  font-size: 30px;
+  font-weight: bolder;
+  color: #006eff;
+  height: 60px;
+  display: block;
 }
-.el-form-item >>> .el-form-item__label{
-    font-size: 12px;
-    height: 20px;
-    padding: 0;
+.el-form-item >>> .el-form-item__label {
+  font-size: 12px;
+  height: 20px;
+  padding: 0;
 }
-#enter{
-    width: 300px
+#enter {
+  width: 300px;
 }
-#text1, #text2, #text3{
-    color: white;
+#text1,
+#text2,
+#text3 {
+  color: white;
 }
-#text1{
-    font-size: 36px;
-    display: block;
-    margin: 20px;
-    margin-bottom: 10px;
+#text1 {
+  font-size: 36px;
+  display: block;
+  margin: 20px;
+  margin-bottom: 10px;
 }
-#text2{
-    margin-left: 23px;
-    display: block;
+#text2 {
+  margin-left: 23px;
+  display: block;
+}
 
-}
-
-#text3{
-    display: block;
+#text3 {
+  display: block;
   font-family: YouShe;
-    font-size: 32px;
-    margin-top:460px;
-    margin-left: 158px;
+  font-size: 32px;
+  margin-top: 460px;
+  margin-left: 158px;
 }
 </style>

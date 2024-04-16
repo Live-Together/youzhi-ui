@@ -5,7 +5,7 @@
             <el-menu :default-openeds="['1', '3']" router 
             class="el-menu-vertical-demo" 
             style="height:200px; padding-top: 10px;">
-                <el-menu-item index="/PersonInfo" style="width: 100%; padding-left: 0;" @click="getStudentId">
+                <el-menu-item index="/PersonInfo" style="width: 100%; padding-left: 0;">
                     <i class="el-icon-user"></i>
                     <span slot="title">个人信息</span>
                 </el-menu-item>
