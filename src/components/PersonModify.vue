@@ -102,8 +102,7 @@ export default {
   },
   mounted() {
     this.loading = true;
-    this.student.studentId = sessionStorage.getItem("user");
-    getStudentInfo(this.student.studentId).then((res) => {
+    getStudentInfo().then((res) => {
       if (res.data.code === 200) {
         this.student.username = res.data.data.username;
         this.student.studentName = res.data.data.studentName;

@@ -10,7 +10,8 @@ const store = new Vuex.Store({
     state: {
         pageIndex: 1,
         name: "zhangsan",
-        schoolList: []
+        schoolList: [],
+        token: null
     },
     mutations: {
         changePageIndex(state, pageIndex){
@@ -18,6 +19,10 @@ const store = new Vuex.Store({
         },
         changeSchoolList(state, schoolList){
             state.schoolList = schoolList
+        },
+        setToken(state, token){
+            localStorage.setItem("token", token)
+            state.token = token
         }
     }
 })

@@ -52,13 +52,29 @@ export const routes = [
 			},
 		]
 	},
-	
+
 ]
 
-export default new Router({
+const router = new Router({
 	mode: 'history', // 去掉url中的#
 	scrollBehavior: () => ({
 		y: 0
 	}),
 	routes: routes
 })
+
+router.beforeEach((to, from, next) => {
+	if (to.path == '/login' || to.path == '/') {
+		next()
+	} else {
+		const token = localStorage.getItem("token")
+		if (token == null || token == '') {
+			alert("无权限，请登录")
+			next("/login")
+		} else {
+			next()
+		}
+	}
+})
+
+export default router

@@ -1,8 +1,8 @@
 import request from '@/utils/request.js'
 
-export function getStudentInfo(id) {
+export function getStudentInfo() {
     return request({
-        url: "/" + id,
+        url: "/getStudentInfo",
         method: "GET",
     })
 }

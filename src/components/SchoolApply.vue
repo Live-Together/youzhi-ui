@@ -136,7 +136,7 @@ export default {
         return;
       }
 
-      schoolSubmit(this.studentId, this.schoolInfo).then((res) => {
+      schoolSubmit(this.schoolInfo).then((res) => {
         this.tableData = res.data.data.map((item) => {
           item.majorVariety = this.switchMajorVariety(item.majorVariety);
           return item;
@@ -177,8 +177,7 @@ export default {
     },
   },
   mounted() {
-    this.studentId = sessionStorage.getItem("user");
-    getSchoolSubmitById(this.studentId).then((res) => {
+    getSchoolSubmitById().then((res) => {
       this.tableData = res.data.data.map((item) => {
         item.majorVariety = this.$options.methods.switchMajorVariety(
           item.majorVariety

@@ -8,9 +8,9 @@ export function getMajorNameBySchoolName(query) {
     })
 }
 
-export function schoolSubmit(id, query) {
+export function schoolSubmit( query) {
     return request({
-        url: "/" + id + "/schoolSubmit",
+        url: "/schoolSubmit",
         method: "POST",
         data: query
     })
@@ -24,9 +24,9 @@ export function deleteSchoolSubmit(query) {
     })
 }
 
-export function getSchoolSubmitById(id) {
+export function getSchoolSubmitById() {
     return request({
-        url: "/" + id + "/getSchoolSubmitById",
+        url: "/getSchoolSubmitById",
         method: "GET",
     })
 }
