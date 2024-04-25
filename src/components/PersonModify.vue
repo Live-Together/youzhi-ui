@@ -104,9 +104,7 @@ export default {
     this.loading = true;
     getStudentInfo().then((res) => {
       if (res.data.code === 200) {
-        this.student.username = res.data.data.username;
-        this.student.studentName = res.data.data.studentName;
-        this.student.score = res.data.data.score;
+        this.student = res.data.data
         this.student.subject = res.data.data.subject + "";
         this.loading = false;
       } else {
