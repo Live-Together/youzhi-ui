@@ -1,76 +1,67 @@
 <template>
   <div style="padding-top: 20px">
-    <div>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <div class="grid-content bg-purple">
-            <el-input
-              v-model="target.majorName"
-              placeholder="输入专业名称"
-              @keyup.enter.native="handleSearch"
-            >
-              <template #suffix>
-                <el-button
-                  type="text"
-                  icon="el-icon-search"
-                  id="search"
-                  @click="handleSearch"
-                ></el-button>
-              </template>
-            </el-input>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-select
-              v-model="target.year"
-              filterable
-              placeholder="年份"
-              clearable
-            >
-              <el-option
-                v-for="item in filter.year"
-                :key="item"
-                :value="item"
-              ></el-option>
-            </el-select>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-select
-              v-model="target.majorVariety"
-              placeholder="招收对象"
-              clearable
-            >
-              <el-option
-                v-for="item in filter.majorVariety"
-                :key="item"
-                :value="item"
-                :label="switchMajorVariety(item)"
-              >
-              </el-option>
-            </el-select>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-select
-              v-model="target.schoolVariety"
-              placeholder="学校类别"
-              clearable
-            >
-              <el-option
-                v-for="item in filter.schoolVariety"
-                :key="item"
-                :value="item"
-                :label="switchSchoolVariety(item)"
-              ></el-option>
-            </el-select>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+    <el-form inline>
+      <el-form-item>
+        <el-input
+          v-model="target.majorName"
+          placeholder="输入专业名称"
+          @keyup.enter.native="handleSearch"
+        >
+          <template #suffix>
+            <el-button
+              type="text"
+              icon="el-icon-search"
+              id="search"
+              @click="handleSearch"
+            ></el-button>
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="target.year"
+          filterable
+          placeholder="年份"
+          clearable
+        >
+          <el-option
+            v-for="item in filter.year"
+            :key="item"
+            :value="item"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="target.majorVariety"
+          placeholder="招收对象"
+          clearable
+        >
+          <el-option
+            v-for="item in filter.majorVariety"
+            :key="item"
+            :value="item"
+            :label="switchMajorVariety(item)"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="target.schoolVariety"
+          placeholder="学校类别"
+          clearable
+        >
+          <el-option
+            v-for="item in filter.schoolVariety"
+            :key="item"
+            :value="item"
+            :label="switchSchoolVariety(item)"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+
     <div class="table">
       <el-table
         v-loading="isLoading"

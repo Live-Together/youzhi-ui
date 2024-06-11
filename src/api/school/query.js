@@ -1,5 +1,20 @@
 import request from '@/utils/request.js'
 
+export function deleteSchoolInfo(id) {
+    return request({
+        url: '/' + id,
+        method: 'DELETE'
+    })
+}
+
+export function addSchoolInfo(query) {
+    return request({
+        url: "/",
+        method: "PUT",
+        data: query
+    })
+}
+
 export function getSchoolInfoCount(query) {
     return request({
         url: "/getSchoolInfoCount",

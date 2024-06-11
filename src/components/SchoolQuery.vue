@@ -1,89 +1,103 @@
 <template>
   <div style="padding-top: 20px">
     <div>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <div class="grid-content bg-purple">
-            <el-input
-              v-model="target.schoolName"
-              placeholder="输入学校名称"
-              @keyup.enter.native="handleSearch"
+      <el-form inline>
+        <el-form-item
+          ><el-input
+            v-model="target.schoolName"
+            placeholder="输入学校名称"
+            @keyup.enter.native="handleSearch"
+          >
+            <template #suffix>
+              <el-button
+                type="text"
+                icon="el-icon-search"
+                id="search"
+                @click="handleSearch"
+              ></el-button>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="target.majorName"
+            filterable
+            placeholder="专业名称"
+            clearable
+          >
+            <el-option
+              v-for="item in filter.majorName"
+              :key="item"
+              :value="item"
             >
-              <template #suffix>
-                <el-button
-                  type="text"
-                  icon="el-icon-search"
-                  id="search"
-                  @click="handleSearch"
-                ></el-button>
-              </template>
-            </el-input>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-select
-              v-model="target.majorName"
-              filterable
-              placeholder="专业名称"
-              clearable
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="target.year"
+            filterable
+            placeholder="年份"
+            clearable
+          >
+            <el-option v-for="item in filter.year" :key="item" :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="target.majorVariety"
+            placeholder="招收对象"
+            clearable
+          >
+            <el-option
+              v-for="item in filter.majorVariety"
+              :key="item"
+              :value="item"
+              :label="switchMajorVariety(item)"
+            ></el-option
+          ></el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="target.schoolVariety"
+            placeholder="学校类别"
+            clearable
+          >
+            <el-option
+              v-for="item in filter.schoolVariety"
+              :key="item"
+              :value="item"
+              :label="switchSchoolVariety(item)"
             >
-              <el-option
-                v-for="item in filter.majorName"
-                :key="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-          </div>
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+      <el-row :gutter="5">
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            plain
+            @click="handleAdd"
+            >新增</el-button
+          >
         </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-select
-              v-model="target.year"
-              filterable
-              placeholder="年份"
-              clearable
-            >
-              <el-option v-for="item in filter.year" :key="item" :value="item">
-              </el-option>
-            </el-select>
-          </div>
+        <el-col :span="1.5">
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            plain
+            @click="handleDelete"
+            >删除</el-button
+          >
         </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-select
-              v-model="target.majorVariety"
-              placeholder="招收对象"
-              clearable
-            >
-              <el-option
-                v-for="item in filter.majorVariety"
-                :key="item"
-                :value="item"
-                :label="switchMajorVariety(item)"
-              >
-              </el-option>
-            </el-select>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-            <el-select
-              v-model="target.schoolVariety"
-              placeholder="学校类别"
-              clearable
-            >
-              <el-option
-                v-for="item in filter.schoolVariety"
-                :key="item"
-                :value="item"
-                :label="switchSchoolVariety(item)"
-              >
-              </el-option>
-            </el-select>
-          </div>
-        </el-col>
+        <!-- <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate"
+        v-hasPermi="['system:activity:edit']">修改</el-button> -->
       </el-row>
     </div>
     <div class="table">
@@ -92,7 +106,12 @@
         :data="tableData"
         stripe
         style="width: 100%"
+        @selection-change="handleSelectionChange"
       >
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
         <el-table-column label="序号" width="90%">
           <template #default="scope">
             <!-- 设置序号 -->
@@ -108,8 +127,71 @@
         </el-table-column>
       </el-table>
     </div>
-
     <page-limit :total="total"></page-limit>
+    
+    <el-dialog :visible.sync="open" title="新增院校分数线" append-to-body :close-on-click-modal="false">
+      <el-form ref="form" :rules="rules" :model="form">
+        <el-form-item prop="schoolId" label="学校代码">
+          <el-input v-model.number="form.schoolId" placeholder="请输入学校代码" type="number" oninput="value = value.replace(/[^0-9]/g,'' )"></el-input>
+        </el-form-item>
+        <el-form-item prop="schoolName" label="学校名称">
+          <el-input v-model="form.schoolName" placeholder="请输入学校名称"></el-input>
+        </el-form-item>
+        <el-form-item prop="majorId" label="专业代码">
+          <el-input v-model="form.majorId" placeholder="请输入专业代码" type="number" oninput="value = value.replace(/[^0-9]/g,'' )"></el-input>
+        </el-form-item>
+        <el-form-item prop="majorName" label="专业名称">
+          <el-input v-model="form.majorName" placeholder="请输入专业名称"></el-input>
+        </el-form-item>
+        <el-form-item prop="year" label="年份">
+          <el-input v-model="form.year" placeholder="请输入年份" type="number" oninput="value = value.replace(/[^0-9]/g,'' )"></el-input>
+        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item prop="schoolVariety" label="学校类别">
+              <el-select
+                v-model="form.schoolVariety"
+                placeholder="学校类别"
+                clearable
+              >
+                <el-option
+                  v-for="item in filter.schoolVariety"
+                  :key="item"
+                  :value="item"
+                  :label="switchSchoolVariety(item)"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="majorVariety" label="专业类别">
+              <el-select
+                v-model="form.majorVariety"
+                placeholder="招收对象"
+                clearable
+              >
+                <el-option
+                  v-for="item in filter.majorVariety"
+                  :key="item"
+                  :value="item"
+                  :label="switchMajorVariety(item)"
+                ></el-option
+              ></el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        
+        <el-form-item prop="scoreLine" label="投档分数线">
+          <el-input v-model="form.scoreLine" placeholder="请输入投档分数线" type="number" oninput="value = value.replace(/[^0-9]/g,'' )"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="open = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -119,11 +201,26 @@ import {
   getSchoolInfoCount,
   getSchoolInfoBySchoolName,
   getSchoolInfo,
+  addSchoolInfo,
+  deleteSchoolInfo
 } from "@/api/school/query";
 
 export default {
   data() {
     return {
+      rules: {
+        schoolId: { required: true, message: "请输入学校代码", trigger: "blur" },
+        schoolName: { required: true, message: "请输入学校名称", trigger: "blur" },
+        schoolVariety: { required: true, message: "请选择学校类别", trigger: "blur" },
+        majorId: { required: true, message: "请输入专业代码", trigger: "blur" },
+        majorName: { required: true, message: "请输入专业名称", trigger: "blur" },
+        majorVariety: { required: true, message: "请选择专业类别", trigger: "blur" },
+        year: { required: true, message: "请输入年份", trigger: "blur" },
+        scoreLine: { required: true, message: "请输入分数线", trigger: "blur" },
+
+      },
+      form: {},
+      open: false,
       target: {
         schoolName: "",
         majorName: "",
@@ -165,6 +262,7 @@ export default {
           prop: "scoreLine",
         },
       ],
+      ids: [],
       tableData: [],
       schoolInfoTotal: [],
       total: 0,
@@ -181,6 +279,35 @@ export default {
     this.handleSearch();
   },
   methods: {
+    handleDelete() {
+      deleteSchoolInfo(this.ids).then(res => {
+        if(res.data.code == 200) {
+          this.$message.success("操作成功")
+          this.handleSearch()
+        }
+      })
+    },
+    handleSelectionChange(val) {
+      this.ids = val.map(item => item.id)
+    },
+    submitForm() {
+      this.$refs['form'].validate(valid => {
+        if(valid) {
+          // console.log(this.$message);
+          addSchoolInfo(this.form).then(res => {
+            if(res.data.code == 200) {
+              this.open = false
+              this.$message.success("操作成功")
+            }
+            
+          })
+        }
+      })
+    },
+    handleAdd() {
+      this.form = {}
+      this.open = true
+    },
     handleSearch() {
       this.$store.commit("changePageIndex", 1);
       this.getSchoolInfo();
@@ -289,5 +416,11 @@ export default {
   font-size: 22px;
   padding-top: 9px;
   padding-bottom: 9px;
+}
+::v-deep input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+}
+::v-deep input[type="number"] {
+    -moz-appearance: textfield !important;
 }
 </style>
