@@ -40,7 +40,7 @@
             <el-form-item>
               <el-button
                 type="primary"
-                @click="submitForm('ruleForm')"
+                @click="submitForm"
                 style="width: 80%; padding: 8px; margin-left: 30px"
                 >登录</el-button
               >
@@ -75,8 +75,8 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm() {
+      this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           login(this.ruleForm).then((res) => {
             if (res.data.code == 200) {

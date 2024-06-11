@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Cookies from 'js-cookie'
+
 
 Vue.use(Router)
 // 路由
@@ -26,6 +28,7 @@ export const routes = [
 			},
 			{
 				path: '/MajorQuery',
+				// component: () => import('@/views/test.vue')
 				component: () => import('@/components/MajorQuery')
 			},
 			{
@@ -67,13 +70,17 @@ router.beforeEach((to, from, next) => {
 	if (to.path == '/login' || to.path == '/') {
 		next()
 	} else {
-		const token = localStorage.getItem("token")
-		if (token == null || token == '') {
-			alert("无权限，请登录")
-			next("/login")
-		} else {
-			next()
+		let token = localStorage.getItem("token")
+		if(token == null || token == '') {
+			token = Cookies.get("token")
+			if(token == null || token == '' || token == undefined) {
+				alert("无权限，请登录")
+				next("/login")
+			} else {
+				localStorage.setItem("token", token)
+			}
 		}
+		next()
 	}
 })
 
