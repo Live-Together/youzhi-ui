@@ -76,16 +76,21 @@ export default {
         this.msg = "确 认";
         this.edit = false;
       } else {
-        this.msg = "修 改";
-        this.edit = true;
-        //在后端进行修改并发送请求
-        updateInfo(this.student).then((res) => {
-          if (res.data.code === 200) {
-            this.$message.success("修改成功");
-          } else {
-            this.$message.error("修改失败");
+        this.$refs["studentForm"].validate(valid => {
+          if(valid) {
+            updateInfo(this.student).then((res) => {
+              this.msg = "修 改";
+              this.edit = true;
+              if (res.data.code === 200) {
+                this.$message.success("修改成功");
+              } else {
+                this.$message.error("修改失败");
+              }
+            });
           }
-        });
+        })
+        //在后端进行修改并发送请求
+
       }
     },
 
@@ -107,9 +112,6 @@ export default {
         this.student = res.data.data
         this.student.subject = res.data.data.subject + "";
         this.loading = false;
-      } else {
-        this.$message("用户还未登录");
-        this.$router.push("/");
       }
     });
   },

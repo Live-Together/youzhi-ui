@@ -128,7 +128,6 @@
       </el-table>
     </div>
     <page-limit :total="total"></page-limit>
-    
     <el-dialog :visible.sync="open" title="新增院校分数线" append-to-body :close-on-click-modal="false">
       <el-form ref="form" :rules="rules" :model="form">
         <el-form-item prop="schoolId" label="学校代码">
@@ -217,7 +216,6 @@ export default {
         majorVariety: { required: true, message: "请选择专业类别", trigger: "blur" },
         year: { required: true, message: "请输入年份", trigger: "blur" },
         scoreLine: { required: true, message: "请输入分数线", trigger: "blur" },
-
       },
       form: {},
       open: false,

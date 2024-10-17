@@ -21,9 +21,13 @@ const store = new Vuex.Store({
             state.schoolList = schoolList
         },
         setToken(state, token){
-            localStorage.setItem("token", token)
+            if(token == null) {
+                localStorage.setItem("token", token)
+            } else {
+                localStorage.removeItem("token")
+            }
             state.token = token
-        }
+        },
     }
 })
 

@@ -86,7 +86,6 @@ export default {
         ],
         checkPassword: [
           {
-            required: true,
             validator: validatePass,
             trigger: ["blur", "change"],
           },
@@ -94,14 +93,7 @@ export default {
       },
     };
   },
-  mounted() {
-    this.getStudentId();
-  },
   methods: {
-    //获取登录学生id
-    getStudentId() {
-      this.student.studentId = sessionStorage.getItem("user");
-    },
 
     //更新学生信息
     handleUpdate() {
@@ -109,16 +101,21 @@ export default {
         this.msg = "确 认";
         this.isEdit = false;
       } else {
-        this.msg = "修 改";
-        this.isEdit = true;
-        //在后端进行修改并发送请求
-        updatePwd(this.student).then((res) => {
-          if (res.data.code === 200) {
-            this.$message.success("修改成功");
-          } else {
-            this.$message.error("修改失败");
+        this.$refs["passwordForm"].validate(valid => {
+          if(valid) {
+            //在后端进行修改并发送请求
+            updatePwd(this.student).then((res) => {
+              this.msg = "修 改";
+              this.isEdit = true; 
+              if (res.data.code === 200) {
+                this.$message.success("修改成功");
+              } else {
+                this.$message.error(`修改失败：${res.data.msg}`);
+              }
+            });
           }
-        });
+        })
+
       }
     },
   },

@@ -2,14 +2,14 @@ import request from '@/utils/request.js'
 
 export function deleteSchoolInfo(id) {
     return request({
-        url: '/' + id,
+        url: '/schoolInfo/' + id,
         method: 'DELETE'
     })
 }
 
 export function addSchoolInfo(query) {
     return request({
-        url: "/",
+        url: "/schoolInfo",
         method: "PUT",
         data: query
     })
