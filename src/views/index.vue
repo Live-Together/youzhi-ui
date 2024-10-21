@@ -19,7 +19,8 @@
       <el-menu-item index="/MajorQuery">智择专业</el-menu-item>
       <el-menu-item index="/SchoolPush">智推高校</el-menu-item>
       <el-menu-item index="/SchoolApply">模拟填报</el-menu-item>
-      <el-menu-item index="/PersonInfo">个人信息</el-menu-item>
+      <!-- <el-menu-item index="/PersonInfo">个人信息</el-menu-item> -->
+      <el-menu-item index="/ConsultOnilne">在线咨询</el-menu-item>
     </el-menu>
 
   </el-header>

@@ -182,6 +182,7 @@ export default {
               this.$message.success("登陆成功");
               window.sessionStorage.setItem("user", this.ruleForm.studentId);
               this.$store.commit("setToken", res.data.data.token);
+              this.$store.commit("setId", res.data.data.id);
               this.$router.push("/Home");
             } else {
               this.$message.error("账号或密码错误");

@@ -53,6 +53,10 @@ export const routes = [
 				path: '/SchoolApply',
 				component: () => import('@/components/SchoolApply')
 			},
+			{
+				path: '/ConsultOnilne',
+				component: () => import('@/components/ConsultOnilne')
+			}
 		]
 	},
 

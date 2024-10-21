@@ -8,6 +8,7 @@ Vue.use(Vuex)
 // 创建仓库 store
 const store = new Vuex.Store({
     state: {
+        id: "",
         pageIndex: 1,
         name: "zhangsan",
         schoolList: [],
@@ -27,6 +28,10 @@ const store = new Vuex.Store({
                 localStorage.removeItem("token")
             }
             state.token = token
+        },
+        setId(state, id) {
+            if(id)
+                state.id = id
         },
     }
 })
